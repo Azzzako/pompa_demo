@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Archivo Black', 'Archivo', sans-serif;
+  --font-sans: 'Archivo', 'Inter', sans-serif;
+  --font-condensed: 'Archivo', sans-serif;
+
+  /* Paleta Pompa Street (extraída del logo) */
+  --color-ink: #170a30;
+  --color-ink-2: #2a1b52;
+  --color-violet: #6b4bd6;
+  --color-pink: #ff49ab;
+  --color-flame: #ff9f23;
+  --color-paper: #ffffff;
+  --color-mist: #f7f5fa;
+  --color-line: #e7e3ee;
+
+  /* Alias semánticos del sitio público */
+  --color-bone: #170a30;
+  --color-ember: #ff49ab;
+  --color-acid: #ff9f23;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  ::selection {
+    background: var(--color-pink);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-mist);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d5cfe0;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-pink);
+  }
+}
+
+/* El panel admin conserva su skin oscuro sobre el sitio claro */
+.admin-skin {
+  --color-ink: #08070a;
+  --color-ink-2: #100e14;
+  --color-violet: #7b2eff;
+  --color-bone: #f4f1ea;
+  --color-ember: #ff2e63;
+  --color-acid: #d9ff2e;
+  --color-line: #26222e;
+  background: var(--color-ink);
+  color: var(--color-bone);
+}
+
+@utility text-stroke {
+  -webkit-text-stroke: 1.5px currentColor;
+  color: transparent;
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+.animate-marquee-rev {
+  animation: marquee-rev 38s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-rev {
+    animation: none;
+  }
+}
