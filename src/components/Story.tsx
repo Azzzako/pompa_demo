@@ -1,20 +1,31 @@
 import { motion } from 'motion/react'
 import { EVENTS, STATS } from '../data'
 import { Counter, Kicker, Reveal } from './ui'
+import type { Variant } from '../variant'
 
-export default function Story() {
+export default function Story({ variant }: { variant: Variant }) {
+  const street = variant === 'street'
+
+  const display = street
+    ? 'font-brut text-[clamp(2.4rem,6.4vw,4.6rem)] leading-[0.9] tracking-[0.005em] uppercase'
+    : 'font-display text-[clamp(2.2rem,5.4vw,4rem)] leading-[0.94] tracking-[-0.02em] uppercase'
+
   return (
     <section
       id="historia"
-      className="mx-auto max-w-[1500px] px-5 py-20 md:px-8 md:py-28"
+      className={`mx-auto max-w-[1500px] px-5 py-20 md:px-8 md:py-28 ${street ? 'street-grain relative' : ''}`}
     >
-      <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+      {street && <div className="street-hatch pointer-events-none absolute inset-0" />}
+
+      <div className="relative grid gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <Reveal>
-            <Kicker index="03">Nuestra historia</Kicker>
+            <Kicker index="03" theme={variant}>
+              Nuestra historia
+            </Kicker>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="mt-6 font-display text-[clamp(2.2rem,5.4vw,4rem)] leading-[0.94] tracking-[-0.02em] uppercase">
+            <h2 className={`mt-6 ${display}`}>
               Diez años
               <br />
               <span className="text-pink">sin aflojar</span>
@@ -35,13 +46,39 @@ export default function Story() {
           </Reveal>
 
           <Reveal delay={0.3} className="mt-10">
-            <div className="grid grid-cols-2 border-t border-line sm:grid-cols-4">
-              {STATS.map((s) => (
-                <div key={s.label} className="border-b border-line py-6 pr-4 sm:border-b-0">
-                  <div className="font-display text-3xl tracking-tight md:text-4xl">
+            <div
+              className={
+                street
+                  ? 'grid grid-cols-2 gap-3 sm:grid-cols-4'
+                  : 'grid grid-cols-2 border-t border-line sm:grid-cols-4'
+              }
+            >
+              {STATS.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={
+                    street
+                      ? `border-2 border-ink p-4 ${i % 2 ? 'bg-flame' : 'bg-mist'}` +
+                        (i > 1 ? ' mt-0' : '')
+                      : 'border-b border-line py-6 pr-4 sm:border-b-0'
+                  }
+                >
+                  <div
+                    className={
+                      street
+                        ? 'font-display text-3xl tracking-tight md:text-4xl'
+                        : 'font-display text-3xl tracking-tight md:text-4xl'
+                    }
+                  >
                     <Counter to={s.value} suffix={s.suffix} />
                   </div>
-                  <div className="mt-1.5 text-[10px] leading-snug tracking-[0.16em] text-ink/45 uppercase">
+                  <div
+                    className={
+                      street
+                        ? 'mt-1.5 font-brut text-[10px] leading-snug tracking-[0.12em] uppercase'
+                        : 'mt-1.5 text-[10px] leading-snug tracking-[0.16em] text-ink/45 uppercase'
+                    }
+                  >
                     {s.label}
                   </div>
                 </div>
@@ -51,7 +88,7 @@ export default function Story() {
         </div>
 
         <Reveal delay={0.15}>
-          <div className="overflow-hidden border border-line">
+          <div className={street ? 'border-2 border-ink street-hatch' : 'border border-line'}>
             <div className="aspect-4/5 w-full overflow-hidden bg-mist">
               <motion.img
                 src="/life-3.jpg"
@@ -65,22 +102,36 @@ export default function Story() {
               />
             </div>
           </div>
-          <p className="mt-4 font-mono text-[11px] tracking-[0.18em] text-ink/40 uppercase">
+          <p
+            className={
+              street
+                ? 'mt-4 font-brut text-[11px] tracking-[0.16em] text-ink/50 uppercase'
+                : 'mt-4 font-mono text-[11px] tracking-[0.18em] text-ink/40 uppercase'
+            }
+          >
             Fundada 2016 · Insurgentes Norte 110
           </p>
         </Reveal>
       </div>
 
       {/* Events */}
-      <div id="eventos" className="mt-24 md:mt-32">
+      <div id="eventos" className="relative mt-24 md:mt-32">
         <Reveal>
-          <Kicker index="04">Eventos</Kicker>
-          <h2 className="mt-6 font-display text-[clamp(1.9rem,4.4vw,3.2rem)] tracking-[-0.02em] uppercase">
+          <Kicker index="04" theme={variant}>
+            Eventos
+          </Kicker>
+          <h2
+            className={
+              street
+                ? 'mt-6 font-brut text-[clamp(2rem,5.4vw,3.6rem)] tracking-[0.005em] uppercase'
+                : 'mt-6 font-display text-[clamp(1.9rem,4.4vw,3.2rem)] tracking-[-0.02em] uppercase'
+            }
+          >
             Nos vas a <span className="text-pink">ver ahí</span>
           </h2>
         </Reveal>
 
-        <div className="mt-10 border-t border-line">
+        <div className={street ? 'mt-10 border-t-2 border-ink' : 'mt-10 border-t border-line'}>
           {EVENTS.map((e, i) => (
             <motion.a
               key={e.name}
@@ -89,17 +140,35 @@ export default function Story() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="group flex items-center justify-between gap-6 border-b border-line py-7 transition-colors hover:bg-mist"
+              className={
+                street
+                  ? 'group flex items-center justify-between gap-6 border-b-2 border-ink px-4 py-6 transition-colors hover:bg-pink'
+                  : 'group flex items-center justify-between gap-6 border-b border-line py-7 transition-colors hover:bg-mist'
+              }
             >
               <div className="flex items-baseline gap-5">
                 <span className="font-mono text-[11px] text-ink/35">0{i + 1}</span>
-                <span className="font-display text-xl tracking-tight uppercase transition-transform duration-300 group-hover:translate-x-2 sm:text-2xl">
+                <span
+                  className={
+                    street
+                      ? 'font-brut text-xl tracking-[0.03em] uppercase transition-transform duration-300 group-hover:translate-x-2 sm:text-2xl'
+                      : 'font-display text-xl tracking-tight uppercase transition-transform duration-300 group-hover:translate-x-2 sm:text-2xl'
+                  }
+                >
                   {e.name}
                 </span>
               </div>
               <div className="flex items-center gap-5 text-xs text-ink/50">
                 <span className="hidden sm:block">{e.city}</span>
-                <span className="border border-line px-3 py-1 whitespace-nowrap">{e.date}</span>
+                <span
+                  className={
+                    street
+                      ? 'border-2 border-ink px-3 py-1 font-brut text-[11px] tracking-[0.08em] uppercase'
+                      : 'border border-line px-3 py-1 whitespace-nowrap'
+                  }
+                >
+                  {e.date}
+                </span>
               </div>
             </motion.a>
           ))}

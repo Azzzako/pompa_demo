@@ -4,6 +4,7 @@
   --font-display: 'Archivo Black', 'Archivo', sans-serif;
   --font-sans: 'Archivo', 'Inter', sans-serif;
   --font-condensed: 'Archivo', sans-serif;
+  --font-brut: 'Anton', 'Archivo Black', sans-serif;
 
   /* Paleta Pompa Street (extraída del logo) */
   --color-ink: #170a30;
@@ -15,10 +16,70 @@
   --color-mist: #f7f5fa;
   --color-line: #e7e3ee;
 
+  /* Superficie oscura y su texto (independiente de la inversión de --color-ink) */
+  --color-deep: #170a30;
+  --color-on-deep: #ffffff;
+
+  /* Texto sobre superficie de acento */
+  --color-on-accent: #170a30;
+  --color-on-ink: #ffffff;
+
   /* Alias semánticos del sitio público */
   --color-bone: #170a30;
   --color-ember: #ff49ab;
   --color-acid: #ff9f23;
+}
+
+/* ============================================================
+   POMPA DARK — minimalista, fondo no blanco
+   ============================================================ */
+.theme-dark {
+  --color-paper: #0b0810;
+  --color-ink: #f3f0f7;
+  --color-ink-2: #17111f;
+  --color-mist: #140e1d;
+  --color-line: #2a2038;
+  --color-pink: #ff49ab;
+  --color-flame: #ff9f23;
+  --color-violet: #8b6ef0;
+  --color-deep: #0b0810;
+  --color-on-deep: #f3f0f7;
+  --color-on-accent: #0b0810;
+  --color-on-ink: #0b0810;
+  --color-bone: #f3f0f7;
+  --color-ember: #ff49ab;
+  --color-acid: #ff9f23;
+  --theme-radius: 0px;
+  --theme-border: 1px;
+  --theme-display: var(--font-display);
+  --theme-display-tracking: -0.03em;
+  --theme-display-weight: 400;
+}
+
+/* ============================================================
+   POMPA STREET — urbano / barrio
+   ============================================================ */
+.theme-street {
+  --color-paper: #14100f;
+  --color-ink: #f5efe4;
+  --color-ink-2: #1e1817;
+  --color-mist: #1c1615;
+  --color-line: #3a2f2b;
+  --color-pink: #ff2e88;
+  --color-flame: #ff8a1f;
+  --color-violet: #8a63ff;
+  --color-deep: #14100f;
+  --color-on-deep: #f5efe4;
+  --color-on-accent: #14100f;
+  --color-on-ink: #14100f;
+  --color-bone: #f5efe4;
+  --color-ember: #ff2e88;
+  --color-acid: #ff8a1f;
+  --theme-radius: 0px;
+  --theme-border: 2px;
+  --theme-display: var(--font-brut);
+  --theme-display-tracking: 0.005em;
+  --theme-display-weight: 400;
 }
 
 @layer base {
@@ -56,7 +117,7 @@
     background: var(--color-mist);
   }
   ::-webkit-scrollbar-thumb {
-    background: #d5cfe0;
+    background: #3a3348;
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -64,7 +125,7 @@
   }
 }
 
-/* El panel admin conserva su skin oscuro sobre el sitio claro */
+/* El panel admin conserva su skin oscuro sobre cualquier landing */
 .admin-skin {
   --color-ink: #08070a;
   --color-ink-2: #100e14;
@@ -73,13 +134,24 @@
   --color-ember: #ff2e63;
   --color-acid: #d9ff2e;
   --color-line: #26222e;
+  --color-paper: #08070a;
+  --color-mist: #100e14;
+  --color-deep: #08070a;
+  --color-on-deep: #f4f1ea;
+  --color-on-accent: #ffffff;
+  --color-on-ink: #ffffff;
   background: var(--color-ink);
   color: var(--color-bone);
 }
 
 @utility text-stroke {
-  -webkit-text-stroke: 1.5px currentColor;
+  -webkit-text-stroke: 1.5px var(--color-ink);
   color: transparent;
+}
+
+@utility display-face {
+  font-family: var(--theme-display, var(--font-display));
+  letter-spacing: var(--theme-display-tracking, -0.02em);
 }
 
 @utility grain {
@@ -93,6 +165,76 @@
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+}
+
+/* ---------- utilidades urbanas (POMPA STREET) ---------- */
+.street-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--color-ink) 7%, transparent) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+.street-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.street-tape {
+  position: relative;
+}
+.street-tape::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 92px;
+  height: 22px;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: color-mix(in srgb, var(--color-flame) 70%, transparent);
+  mix-blend-mode: normal;
+  opacity: 0.85;
+  clip-path: polygon(3% 0, 97% 4%, 100% 96%, 0 100%);
+}
+
+.street-sticker {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  background: var(--color-flame);
+  color: var(--color-on-accent);
+  font-family: var(--font-brut);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  rotate: -3deg;
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+}
+
+.street-rule {
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-flame) 0 18px,
+    transparent 18px 30px
+  );
+}
+
+.street-bar {
+  background: linear-gradient(
+    90deg,
+    var(--color-pink) 0%,
+    var(--color-pink) 14%,
+    var(--color-flame) 14%,
+    var(--color-flame) 28%,
+    var(--color-ink) 28%,
+    var(--color-ink) 42%
+  );
 }
 
 @keyframes marquee {

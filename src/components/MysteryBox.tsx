@@ -2,71 +2,158 @@ import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
 import { BOXES, money } from '../data'
 import { Reveal } from './ui'
+import type { Variant } from '../variant'
 
-export default function MysteryBox() {
+export default function MysteryBox({ variant }: { variant: Variant }) {
+  const street = variant === 'street'
+
+  const section = street
+    ? 'street-grain relative overflow-hidden border-y-[3px] border-ink bg-paper text-ink'
+    : 'bg-pink text-on-accent'
+
+  const display = street
+    ? 'font-brut text-[clamp(2.4rem,6.4vw,4.6rem)] leading-[0.9] tracking-[0.005em] uppercase'
+    : 'font-display text-[clamp(2.2rem,5.4vw,4rem)] leading-[0.94] tracking-[-0.02em] uppercase'
+
+  const grid = street
+    ? 'mt-14 grid gap-5 lg:grid-cols-3'
+    : 'mt-14 grid gap-px border border-white/30 bg-white/30 md:grid-cols-3'
+
+  const card = (i: number) =>
+    street
+      ? `street-tape relative flex flex-col border-2 border-ink p-8 pt-12 transition-transform duration-200 hover:-translate-y-1 ${
+          i === 1 ? 'bg-flame' : 'bg-mist'
+        }`
+      : 'flex flex-col bg-pink p-8 transition-colors duration-300 hover:bg-deep'
+
   return (
-    <section id="mystery" className="bg-pink text-white">
-      <div className="mx-auto max-w-[1500px] px-5 py-20 md:px-8 md:py-28">
+    <section id="mystery" className={section}>
+      {street && <div className="street-hatch pointer-events-none absolute inset-0" />}
+
+      <div className="relative mx-auto max-w-[1500px] px-5 py-20 md:px-8 md:py-28">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <Reveal className="w-full max-w-xl">
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.18em] text-white/60">/02</span>
-              <span className="text-[11px] font-semibold tracking-[0.26em] uppercase">
-                Mystery Box
-              </span>
-              <span className="h-px flex-1 bg-white/30" />
-            </div>
-            <h2 className="mt-6 font-display text-[clamp(2.2rem,5.4vw,4rem)] leading-[0.94] tracking-[-0.02em] uppercase">
+            {street ? (
+              <div className="flex items-center gap-3">
+                <span className="border-2 border-ink bg-pink px-2 py-0.5 font-brut text-[11px] tracking-[0.1em] text-on-accent">
+                  02
+                </span>
+                <span className="street-rule flex-1" />
+                <span className="font-brut text-[13px] tracking-[0.16em] uppercase">
+                  Mystery Box
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[11px] tracking-[0.18em] text-on-accent/60">
+                  /02
+                </span>
+                <span className="text-[11px] font-semibold tracking-[0.26em] uppercase">
+                  Mystery Box
+                </span>
+                <span className="h-px flex-1 bg-on-accent/30" />
+              </div>
+            )}
+
+            <h2 className={`mt-6 ${display}`}>
               Elige tu
               <br />
-              riesgo
+              {street ? <span className="text-pink">riesgo</span> : <>riesgo</>}
             </h2>
           </Reveal>
 
           <Reveal delay={0.12} className="lg:text-right">
-            <p className="max-w-sm text-[15px] leading-relaxed text-white/85">
+            <p
+              className={
+                street
+                  ? 'max-w-sm text-[15px] leading-relaxed text-ink/70'
+                  : 'max-w-sm text-[15px] leading-relaxed text-on-accent/85'
+              }
+            >
               Tres niveles. Todos los boxes incluyen un par 100% autenticado, verificado por
               nuestro equipo antes de empacarse.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-14 grid gap-px border border-white/30 bg-white/30 md:grid-cols-3">
+        <div className={grid}>
           {BOXES.map((b, i) => (
             <motion.div
               key={b.tier}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col bg-pink p-8 transition-colors duration-300 hover:bg-ink"
+              className={card(i)}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold tracking-[0.24em] uppercase">
+                <span
+                  className={
+                    street
+                      ? 'font-brut text-[12px] tracking-[0.12em] uppercase'
+                      : 'text-[11px] font-semibold tracking-[0.24em] uppercase'
+                  }
+                >
                   Box {b.tier}
                 </span>
-                {i === 1 && (
-                  <span className="bg-white px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-ink uppercase">
-                    Más vendido
-                  </span>
-                )}
+                {i === 1 &&
+                  (street ? (
+                    <span className="border-2 border-ink bg-deep px-2.5 py-1 font-brut text-[10px] tracking-[0.1em] text-on-deep uppercase">
+                      Más vendido
+                    </span>
+                  ) : (
+                    <span className="bg-deep px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-on-deep uppercase">
+                      Más vendido
+                    </span>
+                  ))}
               </div>
 
               <div className="mt-8 font-display text-5xl tracking-tight">{money(b.price)}</div>
-              <p className="mt-2 text-sm text-white/85">{b.items}</p>
-              <p className="mt-4 text-[13px] leading-relaxed text-white/70">{b.copy}</p>
+              <p
+                className={
+                  street ? 'mt-2 text-sm text-ink/75' : 'mt-2 text-sm text-on-accent/85'
+                }
+              >
+                {b.items}
+              </p>
+              <p
+                className={
+                  street
+                    ? 'mt-4 text-[13px] leading-relaxed text-ink/60'
+                    : 'mt-4 text-[13px] leading-relaxed text-on-accent/70'
+                }
+              >
+                {b.copy}
+              </p>
 
-              <ul className="mt-8 flex-1 space-y-3 border-t border-white/30 pt-6">
+              <ul
+                className={
+                  street
+                    ? 'mt-8 flex-1 space-y-3 border-t-2 border-dashed border-ink/40 pt-6'
+                    : 'mt-8 flex-1 space-y-3 border-t border-white/30 pt-6'
+                }
+              >
                 {['Par 100% autenticado', 'Caja y empaques originales', 'Sticker del club Pompa'].map(
                   (f) => (
-                    <li key={f} className="flex items-center gap-2.5 text-[13px] text-white/90">
-                      <Check size={14} /> {f}
+                    <li
+                      key={f}
+                      className={`flex items-center gap-2.5 text-[13px] ${
+                        street ? 'text-ink/85' : 'text-on-accent/90'
+                      }`}
+                    >
+                      <Check size={14} className={street ? 'text-pink' : ''} /> {f}
                     </li>
                   ),
                 )}
               </ul>
 
-              <button className="mt-8 shrink-0 border border-white py-3.5 text-[12px] font-semibold tracking-[0.14em] uppercase transition-colors hover:bg-white hover:text-ink">
+              <button
+                className={
+                  street
+                    ? 'mt-8 shrink-0 border-2 border-ink bg-paper py-3.5 font-brut text-[12px] tracking-[0.1em] text-ink uppercase transition-colors hover:bg-deep hover:text-on-deep'
+                    : 'mt-8 shrink-0 border border-white py-3.5 text-[12px] font-semibold tracking-[0.14em] uppercase transition-colors hover:bg-white hover:text-ink'
+                }
+              >
                 Armar mi box
               </button>
             </motion.div>
