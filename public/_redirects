@@ -1,0 +1,6 @@
+# SPA fallback: toda ruta desconocida devuelve index.html (200, no 404)
+/*    /index.html   200
+
+# Assets con hash en el nombre: cache inmutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
